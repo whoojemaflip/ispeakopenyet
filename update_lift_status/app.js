@@ -15,10 +15,12 @@ function updateWeeklyLiftStatus(currentLiftStatus, lastWeekLiftStatus) {
   var todaysLiftStatus = lastWeekLiftStatus[today] || {}
 
   for (const lift in lifts) {
-    if (lifts[lift] == 1 && !todaysLiftStatus[lift]) {
-      todaysLiftStatus[lift] = time();
-    } else {
-      todaysLiftStatus[lift] = null;
+    if (!todaysLiftStatus[lift]) {
+      if (lifts[lift] == 1) {
+        todaysLiftStatus[lift] = time();
+      } else {
+        todaysLiftStatus[lift] = null;
+      }
     }
   }
 
