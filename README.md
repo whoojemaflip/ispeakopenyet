@@ -1,49 +1,22 @@
-# Architecture
-  - Netlify function to scrape and create data
-  - serve static site from netlify
-  - Site is HTML, JS and a JSON file which holds all the data.
-  - Data file, let's call it app.json, which holds all the lift data
+# AlpineLifts.ca
 
-``` App.json
-{
-  last_updated_at: timestamp,
-  data: [
-    {
-      day: "2020/11/27",
-      lifts: {
-        "7th Heaven Express" => opening time,
-      }
-      ...
-    }
-  ]
-}
-```
+Monorepo containing lambda functions and static site.
 
-Cron function:
-  Run every x minutes (start with 5, see how it goes)
+## Architecture
 
-  launch the next function
+I use node.js inside docker containers to package Lambda functions for data manip. Data stored
+as json files in S3. The UI is served from S3 as a static site.
+### lift_api
 
-1st function: api_proxy
-  Scrape the lift status page for the TerrainStatusFeed json (aka API proxy)
-  We'll share this URL with friends later.
+A simple scraper that returns the current terrain and lift status for Whistler Blackcomb.
+Only required because I don't think the actual API endpoint is public, but the data is
+embedded in the HTML source of the [Mountain Conditions](https://www.whistlerblackcomb.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx) page.
 
-  launch the next function
+### update_lift_status
 
-2nd function:
-  Load the latest terrain_status_feed.json
-  Reduce the TerrainStatusFeed data to the relevant scope which looks someting like:
+Fetches the latest terrain status from the `lift_api`, the current opening_times json from S3,
+mashes them up to create a new opening_times json which it then writes back to S3.
 
-  {
-    timestamp: x,
-    lifts: {
-      "7th Heaven Express" => Status,
-      ...
-    }
-  }
+### Site
 
-
-  launch the next function with the filename as a parameter
-
-3rd function:
-  Apply any changes to the
+Viewable at http://alpinelifts.ca
