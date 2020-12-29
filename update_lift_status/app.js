@@ -1,108 +1,137 @@
-const AWS = require('aws-sdk')
-const axios = require('axios')
-const moment = require('moment')
-const keys = require('../config/keys')
-
-AWS.config.loadFromPath('../config/keys.json')
-const s3 = new AWS.S3()
+const AWS = require('aws-sdk');
+const axios = require('axios');
+const moment = require('moment');
+const s3 = new AWS.S3();
 
 const S3Params = {
-  Bucket: 'ispeakopenyet'
-}
+  Bucket: 'alpinelifts.ca'
+};
 
-function time() {
-  return moment().format('H:mm')
-}
-
-function timestamp() {
-  return moment().format()
-}
-
-function today() {
-  return moment().format('YYYY-MM-DD')
-}
+const terrain_status_api_url = 'https://cms6ky5e1l.execute-api.us-east-1.amazonaws.com/default/lift_api';
 
 function updateWeeklyLiftStatus(currentLiftStatus, lastWeekLiftStatus) {
-  const lifts = currentLiftStatus['Lifts']
-  var todaysLiftStatus = lastWeekLiftStatus[today()] || {}
-  var changed = false
+  const lifts = currentLiftStatus['Lifts'];
+  const today = date();
+  var todaysLiftStatus = lastWeekLiftStatus[today] || {}
 
   for (const lift in lifts) {
-    if (!todaysLiftStatus[lift]) {
-      todaysLiftStatus[lift] = {}
-    }
-
-    if (lifts[lift] == 1 && !todaysLiftStatus[lift]['Standby']) {
-      todaysLiftStatus[lift]['Standby'] = time()
-      changed = true
-    } else if (lifts[lift] == 2 && !todaysLiftStatus[lift]['Running']) {
-      todaysLiftStatus[lift]['Running'] = time()
-      changed = true
+    if (lifts[lift] == 1 && !todaysLiftStatus[lift]) {
+      todaysLiftStatus[lift] = time();
+    } else {
+      todaysLiftStatus[lift] = null;
     }
   }
 
-  return [
-    {
-      ...lastWeekLiftStatus,
-      'lastUpdated': timestamp(),
-      [today()]: todaysLiftStatus,
-    }, changed]
+  const result = {
+    ...lastWeekLiftStatus,
+    'lastUpdated': timestamp(),
+    [today]: todaysLiftStatus,
+  };
+
+  return result;
 }
 
 function getCurrentLiftStatus(terrainStatus) {
-  var date = terrainStatus['Date']
-  var lifts = terrainStatus['Lifts'].reduce(function(acc, lift) {
-    // let mountain = lift['Mountain']
-    let liftName = lift['Name']
-    let liftStatus = lift['Status']
+  var date = terrainStatus['Date'].match(/(\d+)/g)[0];
 
-    acc[liftName] = liftStatus
-    return acc
-  }, {})
+  var lifts = terrainStatus['Lifts'].reduce(function(acc, lift) {
+    let liftName = lift['Name'];
+    let liftStatus = lift['Status'];
+
+    acc[liftName] = liftStatus;
+    return acc;
+  }, {});
 
   return {
     'Date': date,
     'Lifts': lifts
-  }
+  };
 }
 
-function getLastWeekLiftOpeningTimesJson(callback) {
-  s3Get('last_week_lift_opening_times.json', callback)
+function truncateToLastWeek(updatedLastWeekLiftStatus) {
+  return updatedLastWeekLiftStatus;
+}
+
+ async function lambdaHandler(event, context) {
+  const terrainStatus = await fetchTerrainStatusJson();
+  updateTerrainStatusJson(terrainStatus)
+
+  const currentLiftStatus = getCurrentLiftStatus(terrainStatus);
+  // console.log(currentLiftStatus);
+
+  const lastWeekLiftStatus = await getLastWeekLiftOpeningTimesJson();
+  // console.log(lastWeekLiftStatus);
+
+  const updatedWeeklyLiftStatuses = updateWeeklyLiftStatus(currentLiftStatus, lastWeekLiftStatus);
+  // console.log(updatedLastWeekLiftStatus);
+
+  const updatedLastWeekLiftStatus = truncateToLastWeek(updatedWeeklyLiftStatuses);
+
+  updateLastWeekLiftOpeningTimesJson(updatedLastWeekLiftStatus);
+
+  const response = {
+    statusCode: 200,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: updatedLastWeekLiftStatus
+  };
+
+  return response;
+}
+
+module.exports = { lambdaHandler, getCurrentLiftStatus, updateWeeklyLiftStatus, truncateToLastWeek }
+
+// Date Time Helpers
+
+function time() {
+  return moment().format('H:mm');
+}
+
+function timestamp() {
+  return moment().valueOf();
+}
+
+function date() {
+  return moment().format('YYYY-MM-DD');
+}
+
+// External Data reader / writers
+
+async function fetchTerrainStatusJson() {
+  const terrainStatus = await axios.get(terrain_status_api_url);
+  return terrainStatus.data;
+}
+
+async function getLastWeekLiftOpeningTimesJson() {
+  return await s3Get('opening_times.json');
 }
 
 function updateLastWeekLiftOpeningTimesJson(json_data) {
-  s3Write('last_week_lift_opening_times.json', json_data)
+  s3Write('opening_times.json', json_data);
 }
 
 function updateTerrainStatusJson(json_data) {
-  s3Write('terrain_status_feed.json', json_data)
+  s3Write('terrain_status.json', json_data);
 }
 
-function fetchTerrainStatusJson(callback) {
-  const url = 'https://www.whistlerblackcomb.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx'
-
-  axios.get(url)
-    .then(response => response.data)
-    .then(page_html => page_html.match(/TerrainStatusFeed[^{]*(.*);/)[1])
-    .then(html => JSON.parse(html))
-    .then(result => callback(result))
-}
+// S3 Helpers
 
 function s3Get(filename, callback) {
-  s3.getObject(
-    {
-      ...S3Params,
-      Key: filename
-    },
-    function(err, data) {
-      if (err) console.log(err)
-      else {
-        console.log(data.Body.toString())
-      }
+  return new Promise((resolve, reject) => {
+    s3.getObject(
+      {
+        ...S3Params,
+        Key: filename
+      },
+      function(err, data) {
+        if (err || !data) reject(new Error(err));
 
-      callback(JSON.parse(data.Body.toString()))
-    }
-  )
+        const jsonData = JSON.parse(data.Body.toString());
+        resolve(jsonData);
+      }
+    );
+  });
 }
 
 function s3Write(filename, json_data) {
@@ -119,35 +148,5 @@ function s3Write(filename, json_data) {
         console.log('Updated ' + filename)
       }
     },
-  )
-}
-
-function seedLastWeekOpeningTimesJson() {
-  seedJson = {
-    "lastUpdated": "2020-12-02 16:22"
-  }
-
-  seedJson[today()] = {
-    'Gondola': {
-      'Standby': 'December 3rd 2020, 6:28:05 pm',
-      'Running': 'December 3rd 2020, 6:28:05 pm'
-    }
-  }
-
-  updateLastWeekLiftOpeningTimesJson(seedJson)
-}
-
-exports.lambdaHandler = async function(event, context) {
-  fetchTerrainStatusJson(function(currentTerrainStatus) {
-    updateTerrainStatusJson(currentTerrainStatus)
-
-    currentLiftStatus = getCurrentLiftStatus(currentTerrainStatus)
-    getLastWeekLiftOpeningTimesJson(function(lastWeekLiftStatus) {
-      let [updatedLastWeekLiftStatus, changed] = updateWeeklyLiftStatus(currentLiftStatus, lastWeekLiftStatus)
-
-      if (changed) {
-        updateLastWeekLiftOpeningTimesJson(updatedLastWeekLiftStatus)
-      }
-    })
-  })
+  );
 }

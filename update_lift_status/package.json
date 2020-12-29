@@ -9,6 +9,11 @@
     "moment": "^2.29.1"
   },
   "scripts": {
-    "update_app_data": "node -e 'require(\"./update_app_data\").handler()'"
+    "update": "node -e 'require(\"./app\").lambdaHandler()'",
+    "test": "TZ=America/Vancouver jest"
+  },
+  "devDependencies": {
+    "jest": "^26.6.3",
+    "mockdate": "^3.0.2"
   }
 }
