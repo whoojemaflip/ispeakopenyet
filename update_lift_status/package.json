@@ -1,0 +1,14 @@
+{
+  "name": "update_app_data",
+  "version": "1.0.0",
+  "main": "update_app_data.js",
+  "license": "MIT",
+  "dependencies": {
+    "aws-sdk": "^2.803.0",
+    "axios": "^0.21.0",
+    "moment": "^2.29.1"
+  },
+  "scripts": {
+    "update_app_data": "node -e 'require(\"./update_app_data\").handler()'"
+  }
+}
