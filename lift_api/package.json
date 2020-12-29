@@ -1,0 +1,13 @@
+{
+  "name": "lift_api",
+  "version": "1.0.0",
+  "main": "app.js",
+  "license": "MIT",
+  "dependencies": {
+    "chrome-aws-lambda": "^5.5.0",
+    "puppeteer-core": "^5.5.0"
+  },
+  "scripts": {
+    "fetch": "node -e 'require(\"./app\").lambdaHandler()'"
+  }
+}
