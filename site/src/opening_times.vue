@@ -62,7 +62,7 @@ export default {
   },
   methods: {
     fetchLiftStatuses() {
-      const url = 'http://alpinelifts.ca/opening_times.json';
+      const url = 'https://alpinelifts.ca/opening_times.json';
       axios.get(url)
       .then(response => {
         const liftData = response.data;
