@@ -27,6 +27,5 @@ The first time, you'll need to create a repo in ECR
 aws ecr create-repository --repository-name update_lift_status --image-scanning-configuration scanOnPush=true --profile ispeakopen --region us-east-1
 ```
 
-Build and deploy the docker container `make release`
-
-Then you'll have to manually visit the function in [AWS Lambda](https://console.aws.amazon.com/lambda/home?region=us-east-1#/functions/update_lift_status?tab=image) and "Deploy new image".
+Build and deploy the docker container `make release` which builds and deploys the container, and
+kicks off an update to the lambda function.
