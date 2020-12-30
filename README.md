@@ -19,4 +19,4 @@ mashes them up to create a new opening_times json which it then writes back to S
 
 ### Site
 
-Viewable at http://alpinelifts.ca
+Viewable at https://alpinelifts.ca
