@@ -23,6 +23,7 @@ Viewable at https://alpinelifts.ca
 
 ## Roadmap
 
+Indicate opening times vs Season average
 Queue times
 Rebrand as crabstix.ca
 Start logging snowfall
