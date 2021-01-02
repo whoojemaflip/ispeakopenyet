@@ -20,3 +20,10 @@ mashes them up to create a new opening_times json which it then writes back to S
 ### Site
 
 Viewable at https://alpinelifts.ca
+
+## Roadmap
+
+Queue times
+Rebrand as crabstix.ca
+Start logging snowfall
+Spanky's opening times
