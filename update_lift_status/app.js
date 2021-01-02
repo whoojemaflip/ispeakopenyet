@@ -17,7 +17,7 @@ function updateWeeklyLiftStatus(currentLiftStatus, lastWeekLiftStatus) {
   for (const lift in lifts) {
     if (!todaysLiftStatus[lift]) {
       if (lifts[lift] == 1) {
-        todaysLiftStatus[lift] = time();
+        todaysLiftStatus[lift] = timestamp();
       } else {
         todaysLiftStatus[lift] = null;
       }

@@ -37,20 +37,20 @@ const currentLiftStatus = {
 const lastWeekLiftStatus = {
   "lastUpdated": timestampYesterday,
   "2020-12-28": {
-    "7th Heaven Express": "9:18",
-    "Big Red Express": "8:10"
+    "7th Heaven Express": timestampYesterday,
+    "Big Red Express": timestampYesterday
   }
 }
 
 const updatedLastWeekLiftStatus = {
   "lastUpdated": timestampToday,
   "2020-12-28": {
-    "7th Heaven Express": "9:18",
-    "Big Red Express": "8:10"
+    "7th Heaven Express": timestampYesterday,
+    "Big Red Express": timestampYesterday
   },
   "2020-12-29": {
     "7th Heaven Express": null,
-    "Big Red Express": "10:47"
+    "Big Red Express": timestampToday
   }
 }
 
