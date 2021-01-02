@@ -10,7 +10,7 @@
       <ul>
         <li>{{ date.display }}</li>
         <li v-for="lift in liftStatuses[date.index]">
-          {{ lift }}
+          <OpeningTime v-bind:time="lift"></OpeningTime>
         </li>
       </ul>
     </li>
@@ -20,6 +20,7 @@
 <script>
 import Moment from 'moment';
 import axios from 'axios';
+import OpeningTime from './opening_time.vue'
 
 export default {
   data() {
@@ -88,6 +89,9 @@ export default {
         }
       });
     }
+  },
+  components: {
+    OpeningTime
   }
 }
 </script>
