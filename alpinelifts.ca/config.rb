@@ -50,6 +50,15 @@ helpers do
       Time.at(js_timestamp / 1000).strftime("%H:%M")
     end
   end
+
+  def last_updated_at
+    js_timestamp = data.opening_times['lastUpdated']
+    if js_timestamp
+      Time.at(js_timestamp / 1000).strftime("%Y-%m-%d %H:%M:%S")
+    else
+      'err'
+    end
+  end
 end
 
 # Build-specific configuration
