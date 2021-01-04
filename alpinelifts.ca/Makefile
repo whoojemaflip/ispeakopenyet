@@ -37,4 +37,4 @@ build_site:
 deploy_site:
 	aws --profile $(AWS_PROFILE) s3 sync ./build/ $(BUCKET) --acl public-read
 
-release_site: build_site deploy_site
+deploy: build_site deploy_site
