@@ -1,0 +1,72 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+table {
+  width: 100%;
+  padding: 20px;
+  table-layout: fixed;
+
+  th, td {
+    text-align: center;
+    padding: 5px;
+  }
+
+  th:first-child {
+    text-align: left;
+  }
+
+  td.lift {
+    width: 30%;
+  }
+
+  tr:first-child, tr:nth-child(2) {
+    display: table-row !important;
+  }
+
+  &.whistler button.whistler,
+  &.blackcomb button.blackcomb,
+  &.lower button.lower,
+  &.mid button.mid,
+  &.alpine button.alpine {
+    background-color: red;
+  }
+
+  &.whistler {
+    tr {
+      display: none;
+    }
+
+    tr.whistler {
+      display: table-row;
+    }
+  }
+
+  &.blackcomb {
+    tr {
+      display: none;
+    }
+
+    tr.blackcomb {
+      display: table-row;
+    }
+  }
+
+  &.lower {
+    tr.mid, tr.alpine {
+      display: none;
+    }
+  }
+
+  &.mid {
+    tr.lower, tr.alpine {
+      display: none;
+    }
+  }
+
+  &.alpine {
+    tr.lower, tr.mid {
+      display: none;
+    }
+  }
+}

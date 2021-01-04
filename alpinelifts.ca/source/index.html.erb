@@ -1,0 +1,29 @@
+---
+title: Whistler Lift Opening Times
+---
+<h1>Whistler lift opening times</h1>
+
+<table class='whistler'>
+  <tr>
+    <td colspan=7>
+      <button class='whistler' data-group='mountain' data-value='whistler'>Whistler</button>
+      <button class='blackcomb' data-group='mountain' data-value='blackcomb'>Blackcomb</button>
+      <button class='lower' data-group='elevation' data-value='lower'>Lower</button>
+      <button class='mid' data-group='elevation' data-value='mid'>Mid</button>
+      <button class='alpine' data-group='elevation' data-value='alpine'>Alpine</button>
+    </td>
+  <tr>
+    <td class='lift'></td>
+    <% previous_weeks_days.each do |day| %>
+      <th><%= day %></th>
+    <% end %>
+  </tr>
+  <% data.lifts.each do |(lift, meta)| %>
+    <tr class='<%= meta.values_at(:mountain, :elevation).join(" ") %>'>
+      <th><%= lift %></th>
+      <% previous_weeks_dates.each do |date| %>
+        <td><%= opening_time_for(lift, date) %></td>
+      <% end %>
+    </tr>
+  <% end %>
+</table>
