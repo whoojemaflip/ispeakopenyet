@@ -1,22 +1,22 @@
 // This is where it all goes :)
 function toggleFilter(classFilter) {
-  var table = document.querySelector('table');
+  var body = document.querySelector('body');
 
-  table.classList.toggle(classFilter);
+  body.classList.toggle(classFilter);
 }
 
 function clearGroup(group) {
-  var table = document.querySelector('table');
+  var body = document.querySelector('body');
   var els = document.querySelectorAll("[data-group='" + group + "']");
 
   for (let i = 0; i < els.length; i++) {
     var value = els[i].dataset.value;
-    table.classList.remove(value);
+    body.classList.remove(value);
   }
 }
 
 function attachOnloadHandlers() {
-  var buttons = document.querySelectorAll('table button');
+  var buttons = document.querySelectorAll('button');
 
   for (let i = 0; i < buttons.length; i++) {
     let button = buttons[i];

@@ -2,6 +2,14 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.whistler button.whistler,
+.blackcomb button.blackcomb,
+.lower button.lower,
+.mid button.mid,
+.alpine button.alpine {
+  background-color: red;
+}
+
 table {
   width: 100%;
   padding: 20px;
@@ -20,19 +28,12 @@ table {
     width: 30%;
   }
 
-  tr:first-child, tr:nth-child(2) {
+  tr:first-child {
     display: table-row !important;
   }
+}
 
-  &.whistler button.whistler,
-  &.blackcomb button.blackcomb,
-  &.lower button.lower,
-  &.mid button.mid,
-  &.alpine button.alpine {
-    background-color: red;
-  }
-
-  &.whistler {
+  .whistler {
     tr {
       display: none;
     }
@@ -42,31 +43,36 @@ table {
     }
   }
 
-  &.blackcomb {
-    tr {
-      display: none;
-    }
-
-    tr.blackcomb {
-      display: table-row;
-    }
+.blackcomb {
+  tr {
+    display: none;
   }
 
-  &.lower {
-    tr.mid, tr.alpine {
-      display: none;
-    }
+  tr.blackcomb {
+    display: table-row;
   }
+}
 
-  &.mid {
-    tr.lower, tr.alpine {
-      display: none;
-    }
+.lower {
+  tr.mid, tr.alpine {
+    display: none;
   }
+}
 
-  &.alpine {
-    tr.lower, tr.mid {
-      display: none;
-    }
+.mid {
+  tr.lower, tr.alpine {
+    display: none;
   }
+}
+
+.alpine {
+  tr.lower, tr.mid {
+    display: none;
+  }
+}
+
+
+.last_updated {
+  display: block;
+  text-align: right;
 }
