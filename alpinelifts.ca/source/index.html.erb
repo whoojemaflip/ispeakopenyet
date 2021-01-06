@@ -12,20 +12,24 @@ title: Whistler Lift Opening Times
 </div>
 
 <table>
-  <tr>
-    <td class='lift'></td>
-    <% previous_weeks_days.each do |day| %>
-      <th><%= day %></th>
-    <% end %>
-  </tr>
-  <% data.lifts.each do |(lift, meta)| %>
-    <tr class='<%= meta.values_at(:mountain, :elevation).join(" ") %>'>
-      <th><%= lift %></th>
-      <% previous_weeks_dates.each do |date| %>
-        <td><%= opening_time_for(lift, date) %></td>
+  <thead>
+    <tr>
+      <th class='lift'>&nbsp;</th>
+      <% previous_weeks_days.each do |day| %>
+        <th><%= day %></th>
       <% end %>
     </tr>
-  <% end %>
+  </thead>
+  <tbody>
+    <% data.lifts.each do |(lift, meta)| %>
+      <tr class='<%= meta.values_at(:mountain, :elevation).join(" ") %>'>
+        <th><%= lift %></th>
+        <% previous_weeks_dates.each do |date| %>
+          <td><%= opening_time_for(lift, date) %></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
 </table>
 
 <span class='last_updated'>Last updated on <%= last_updated_at %></span>
