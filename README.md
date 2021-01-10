@@ -28,3 +28,9 @@ Queue times
 Rebrand as crabstix.ca
 Start logging snowfall
 Spanky's opening times
+
+## Tech roadmap
+
+json in s3 has some challenges:
+ - maybe turn on syncronous writes if available
+ - cache busting in cloudfront
