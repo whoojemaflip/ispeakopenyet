@@ -12,16 +12,16 @@ class Handler
       "aws s3 sync /tmp/build/ s3://alpinelifts.ca --acl public-read"
     ].each do |cmd|
       stdout, stderr, status = Open3.capture3(cmd)
-      output << stdout
-      errors << stderr
+      output << stdout.split(/\n|\r/)
+      errors << stderr.split(/\n|\r/)
       break unless status.exitstatus == 0
     end
 
     {
       statusCode: 200,
       body: {
-        output: output.join("\n"),
-        errors: errors.join("\n")
+        output: output.flatten,
+        errors: errors.flatten
       }
     }
   end

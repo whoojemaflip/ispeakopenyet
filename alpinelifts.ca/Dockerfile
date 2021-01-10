@@ -17,6 +17,7 @@ COPY Gemfile ./
 RUN bundle install
 COPY . ./
 
+ENV build=/tmp/build
 ENV data=/tmp/data
 ENV TZ=America/Vancouver
 

@@ -1,7 +1,7 @@
 require 'json'
 require 'open-uri'
 
-set :build_dir, '/tmp/build'
+set :build_dir, ENV['build'] if ENV['build']
 set :data_dir, ENV['data'] if ENV['data']
 set :skip_build_clean, true
 

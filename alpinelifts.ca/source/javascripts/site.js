@@ -24,6 +24,17 @@ function initializeState() {
   }
 }
 
+// the idea is that URL is the best indication of intent,
+// followed by the previous session
+// lastly, the default.
+
+// when we change the local state, we should also change
+// the URL - it will make it shareable.
+//
+function updateURL(group, classFilter) {
+  history.replaceState({group: classFilter});
+}
+
 function attachOnloadHandlers() {
   var buttons = document.querySelectorAll('button');
 
@@ -37,6 +48,7 @@ function attachOnloadHandlers() {
       clearGroup(group);
       toggleFilter(classFilter);
       saveState(group, classFilter);
+      // updateURL(group, classFilter);
     })
   }
 }
