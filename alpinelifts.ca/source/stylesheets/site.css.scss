@@ -19,11 +19,7 @@ button {
   }
 }
 
-.whistler button.whistler,
-.blackcomb button.blackcomb,
-.lower button.lower,
-.mid button.mid,
-.alpine button.alpine {
+button.active {
   background: rgb(251,63,168);
   background: linear-gradient(56deg, rgba(251,63,168,1) 0%, rgba(252,70,107,1) 100%);
 }

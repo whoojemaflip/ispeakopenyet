@@ -1,38 +1,35 @@
-function toggleFilter(classFilter) {
+function reinitState() {
   var body = document.querySelector('body');
+  body.removeAttribute('class');
+  var queryParams = new URLSearchParams(location.search);
 
-  body.classList.toggle(classFilter);
+  queryParams.forEach(function(classFilter, _group) {
+    body.classList.add(classFilter);
+
+    document.querySelectorAll("button[data-value='" + classFilter + "']").forEach(function(button) {
+      button.classList.add('active');
+    });
+  });
 }
 
-function clearGroup(group) {
-  var body = document.querySelector('body');
-  var els = document.querySelectorAll("[data-group='" + group + "']");
-
-  for (let i = 0; i < els.length; i++) {
-    var value = els[i].dataset.value;
-    body.classList.remove(value);
-  }
+function deselectOthersInGroup(group, classFilter) {
+  const els = document.querySelectorAll("button[data-group='" + group + "']:not([data-value='" + classFilter + "'])");
+  els.forEach(function(button) {
+    button.removeAttribute('class');
+  });
 }
 
-function saveState(group, classFilter) {
-  localStorage.setItem(group, classFilter);
-}
+function updateURL() {
+  var queryParams = new URLSearchParams();
+  const buttons = document.querySelectorAll('button.active');
 
-function initializeState() {
-  for(var i =0; i < localStorage.length; i++){
-    toggleFilter(localStorage.getItem(localStorage.key(i)));
-  }
-}
+  buttons.forEach(function(button) {
+    var group = button.dataset.group;
+    var classFilter = button.dataset.value;
+    queryParams.set(group, classFilter);
+  });
 
-// the idea is that URL is the best indication of intent,
-// followed by the previous session
-// lastly, the default.
-
-// when we change the local state, we should also change
-// the URL - it will make it shareable.
-//
-function updateURL(group, classFilter) {
-  history.replaceState({group: classFilter});
+  history.replaceState({}, Document.title, '?' + queryParams.toString());
 }
 
 function attachOnloadHandlers() {
@@ -42,13 +39,12 @@ function attachOnloadHandlers() {
     let button = buttons[i];
 
     button.addEventListener('click', function() {
-      group = button.dataset.group;
-      classFilter = button.dataset.value;
-
-      clearGroup(group);
-      toggleFilter(classFilter);
-      saveState(group, classFilter);
-      // updateURL(group, classFilter);
+      var group = button.dataset.group;
+      var classFilter = button.dataset.value;
+      this.classList.toggle('active');
+      deselectOthersInGroup(group, classFilter)
+      updateURL();
+      reinitState();
     })
   }
 }
@@ -70,5 +66,5 @@ function setRefreshTimeout() {
 }
 
 document.addEventListener("DOMContentLoaded", attachOnloadHandlers);
-document.addEventListener("DOMContentLoaded", initializeState);
+document.addEventListener("DOMContentLoaded", reinitState);
 document.addEventListener("DOMContentLoaded", setRefreshTimeout);
