@@ -28,12 +28,8 @@ Viewable at https://alpinelifts.ca
  - Rebrand as crabstix.ca
  - Start logging snowfall
  - Spanky's opening times
- - OG sharing metadata
- - feedback link
  - allow buttons to be deselected
 
 ## Tech roadmap
 
-json in s3 has some challenges:
- - maybe turn on syncronous writes if available
- - cache busting in cloudfront
+json in s3 has some challenges
