@@ -8,6 +8,19 @@ No dependencies, very small site.
 
 Refreshes the table contents every minute once loaded.
 
+# Run the site locally
+
+Install middleman and dependencies
+`bundle install`
+
+Download a copy of the lift opening times data
+`curl https://alpinelifts.ca/opening_times.json -o ./data/opening_times.json`
+
+Run a middleman build
+`bundle exec middleman build`
+
+See the results in a browser
+`bundle exec middleman serve`
 # Test docker build locally
 
 ```
