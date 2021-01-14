@@ -86,10 +86,6 @@ module.exports = { lambdaHandler, getCurrentLiftStatus, updateWeeklyLiftStatus, 
 
 // Date Time Helpers
 
-function time() {
-  return moment().format('H:mm');
-}
-
 function timestamp() {
   return moment().valueOf();
 }
