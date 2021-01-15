@@ -6,14 +6,14 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Use the title from a page's frontmatter if it has one -->
-    <title><%= current_page.data.title || "Middleman" %></title>
+    <title><%= current_page.data.title %></title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <%= stylesheet_link_tag "site" %>
     <%= javascript_include_tag "site" %>
 
     <meta property="og-url" content="https://alpinelifts.ca" />
     <meta property="og-title" content="WB lift opening times" />
-    <meta property="description" content="7 day history of WB alpine lift opening times." />
+    <meta property="og-description" content="7 day history of WB alpine lift opening times." />
   </head>
   <body>
     <%= yield %>
