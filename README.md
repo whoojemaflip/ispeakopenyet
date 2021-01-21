@@ -28,6 +28,7 @@ Viewable at https://alpinelifts.ca
  - Rebrand as crabstix.ca
  - Start logging snowfall
  - Spanky's opening times
+ - Uphill / Backcountry access routes
 
 ## Tech roadmap
 
